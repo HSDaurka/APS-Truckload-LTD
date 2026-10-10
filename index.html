@@ -247,6 +247,25 @@
     textarea { min-height: 110px; resize: vertical; }
     form .btn { justify-self: start; }
 
+    /* Careers */
+    .careers { background: var(--mist); }
+    .careers .wrap { display: grid; grid-template-columns: 1fr 1.2fr; gap: clamp(1.5rem, 5vw, 4rem); align-items: start; }
+    .careers form { border-top: 4px solid var(--navy); }
+    .careers .service-list { margin-top: 1.6rem; }
+    .hint { font-size: .85rem; color: var(--steel); margin: .35rem 0 0; max-width: none; }
+    input[type="file"] { padding: .7rem; border-style: dashed; background: var(--mist); cursor: pointer; }
+    input[type="file"]::file-selector-button {
+      font: 700 .9rem var(--font-body); margin-right: .9rem; padding: .55rem 1rem;
+      border: 2px solid var(--navy); background: var(--navy); color: #fff; cursor: pointer;
+    }
+    input[type="file"]::file-selector-button:hover { background: var(--blue); border-color: var(--blue); }
+    .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+    .form-status { grid-column: 1 / -1; margin: 0; padding: .8rem 1rem; font-weight: 600; max-width: none; display: none; }
+    .form-status.show { display: block; }
+    .form-status.ok { background: #E6F4EA; color: #14532D; border-left: 4px solid #1E8E3E; }
+    .form-status.err { background: #FDECEC; color: #7A1212; border-left: 4px solid #C62828; }
+    .btn[disabled] { opacity: .6; cursor: progress; }
+
     /* Footer */
     footer { background: var(--navy-deep); color: #B9C6EA; padding: 2rem 0; font-size: .95rem; }
     footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; }
@@ -254,8 +273,11 @@
     footer a { color: #fff; }
 
     /* ---------- Responsive ---------- */
+    @media (max-width: 1000px) {
+      .nav { gap: 1.1rem; }
+    }
     @media (max-width: 900px) {
-      .hero .wrap, .services .wrap, .fleet .wrap, .contact .wrap { grid-template-columns: 1fr; }
+      .hero .wrap, .services .wrap, .fleet .wrap, .careers .wrap, .contact .wrap { grid-template-columns: 1fr; }
       .steps { grid-template-columns: 1fr 1fr; }
       .speed { display: none; }
       .fleet .photo { order: -1; }
@@ -301,6 +323,7 @@
         <a href="#services">Services</a>
         <a href="#fleet">Our fleet</a>
         <a href="#process">How it works</a>
+        <a href="#careers">Careers</a>
         <a href="#contact">Contact</a>
         <a class="btn" href="#contact">Get a quote</a>
       </nav>
@@ -411,6 +434,72 @@
       </div>
     </section>
 
+    <!-- ===== CAREERS / JOIN OUR TEAM ===== -->
+    <section class="careers" id="careers" aria-labelledby="careers-title">
+      <div class="wrap">
+        <div>
+          <h2 id="careers-title">Join our team</h2>
+          <p>APS Truckload Ltd is always looking for dependable people. Send us your resume and we will be in touch when there is a fit.</p>
+          <!-- EDIT: change these roles to match what you are actually hiring for -->
+          <ul class="service-list">
+            <li>
+              <h3>Truck drivers</h3>
+              <p>Professional AZ and DZ drivers for full truckload and dry van runs.</p>
+            </li>
+            <li>
+              <h3>Owner-operators</h3>
+              <p>Bring your own tractor and run with a dispatcher who answers the phone.</p>
+            </li>
+            <li>
+              <h3>Dispatch and office</h3>
+              <p>Dispatch, load planning and back-office support at our Brampton office.</p>
+            </li>
+          </ul>
+        </div>
+
+        <form id="careers-form" novalidate>
+          <div>
+            <label for="c-name">Full name</label>
+            <input id="c-name" name="name" type="text" autocomplete="name" required>
+          </div>
+          <div>
+            <label for="c-email">Email</label>
+            <input id="c-email" name="email" type="email" autocomplete="email" required>
+          </div>
+          <div>
+            <label for="c-phone">Phone</label>
+            <input id="c-phone" name="phone" type="tel" autocomplete="tel" required>
+          </div>
+          <div>
+            <label for="c-position">Position</label>
+            <select id="c-position" name="position" required>
+              <option value="">Select one</option>
+              <option>Truck driver (AZ / DZ)</option>
+              <option>Owner-operator</option>
+              <option>Dispatch / office</option>
+              <option>Other / general application</option>
+            </select>
+          </div>
+          <div class="full">
+            <label for="c-message">Tell us about your experience <span style="font-weight:400">(optional)</span></label>
+            <textarea id="c-message" name="message" placeholder="Licence class, years of experience, preferred lanes, availability"></textarea>
+          </div>
+          <div class="full">
+            <label for="c-resume">Resume</label>
+            <input id="c-resume" name="resume" type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required>
+            <p class="hint">PDF, DOC or DOCX, up to 5 MB.</p>
+          </div>
+          <!-- Spam trap: real visitors never see or fill this -->
+          <div class="hp" aria-hidden="true">
+            <label for="c-website">Leave this field empty</label>
+            <input id="c-website" name="website" type="text" tabindex="-1" autocomplete="off">
+          </div>
+          <p class="form-status" id="careers-status" role="status" aria-live="polite"></p>
+          <button class="btn" type="submit" id="careers-submit">Submit application</button>
+        </form>
+      </div>
+    </section>
+
     <!-- ===== CONTACT ===== -->
     <section class="contact" id="contact" aria-labelledby="contact-title">
       <div class="wrap">
@@ -492,6 +581,95 @@
     });
     // Footer year
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // ---------- Careers form ----------
+    // Paste your Google Apps Script web app URL here (see apps-script-careers.gs for setup).
+    var CAREERS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwGyTio_JiZLzE5nZ4ZeF0SnmbejI09zV8X1gAWfI3CnF1itWfIZ3avbeMnTw-4iZGfAg/exec';
+    var MAX_BYTES = 5 * 1024 * 1024;
+    var ALLOWED = ['pdf', 'doc', 'docx'];
+
+    var cForm = document.getElementById('careers-form');
+    var cStatus = document.getElementById('careers-status');
+    var cSubmit = document.getElementById('careers-submit');
+    var cFile = document.getElementById('c-resume');
+
+    function showStatus(msg, type) {
+      cStatus.textContent = msg;
+      cStatus.className = 'form-status show ' + type;
+    }
+
+    function fileError(file) {
+      if (!file) return 'Please attach your resume.';
+      var ext = file.name.split('.').pop().toLowerCase();
+      if (ALLOWED.indexOf(ext) === -1) return 'Resume must be a PDF, DOC or DOCX file.';
+      if (file.size > MAX_BYTES) return 'Resume is too large. Please keep it under 5 MB.';
+      return '';
+    }
+
+    cFile.addEventListener('change', function () {
+      var err = fileError(cFile.files[0]);
+      if (err && cFile.files[0]) { showStatus(err, 'err'); cFile.value = ''; }
+      else { cStatus.className = 'form-status'; }
+    });
+
+    function toBase64(file) {
+      return new Promise(function (resolve, reject) {
+        var r = new FileReader();
+        r.onload = function () { resolve(String(r.result).split(',')[1]); };
+        r.onerror = function () { reject(new Error('Could not read the file')); };
+        r.readAsDataURL(file);
+      });
+    }
+
+    cForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!cForm.reportValidity()) return;
+      if (document.getElementById('c-website').value) return; // bot
+
+      var file = cFile.files[0];
+      var err = fileError(file);
+      if (err) { showStatus(err, 'err'); return; }
+
+      if (CAREERS_ENDPOINT.indexOf('PASTE_') === 0) {
+        showStatus('Online applications are not switched on yet. Please email your resume to dispatch@apstruckloads.ca.', 'err');
+        return;
+      }
+
+      cSubmit.disabled = true;
+      cSubmit.textContent = 'Sending...';
+      showStatus('Uploading your application...', 'ok');
+
+      toBase64(file).then(function (b64) {
+        var payload = {
+          name: document.getElementById('c-name').value.trim(),
+          email: document.getElementById('c-email').value.trim(),
+          phone: document.getElementById('c-phone').value.trim(),
+          position: document.getElementById('c-position').value,
+          message: document.getElementById('c-message').value.trim(),
+          fileName: file.name,
+          mimeType: file.type || 'application/octet-stream',
+          fileData: b64
+        };
+        // text/plain keeps this a "simple" request so Apps Script accepts it without a CORS preflight
+        return fetch(CAREERS_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+      }).then(function (res) { return res.json(); })
+        .then(function (data) {
+          if (!data.ok) throw new Error(data.error || 'Upload failed');
+          cForm.reset();
+          showStatus('Thank you! Your application was received. We will be in touch if there is a fit.', 'ok');
+        })
+        .catch(function () {
+          showStatus('Sorry, something went wrong. Please try again or email your resume to dispatch@apstruckloads.ca.', 'err');
+        })
+        .then(function () {
+          cSubmit.disabled = false;
+          cSubmit.textContent = 'Submit application';
+        });
+    });
   </script>
 </body>
 </html>
