@@ -650,15 +650,15 @@
           mimeType: file.type || 'application/octet-stream',
           fileData: b64
         };
-        // text/plain keeps this a "simple" request so Apps Script accepts it without a CORS preflight
+        // no-cors: Apps Script does not send CORS headers, so the browser hides the reply.
+        // The request still goes through; we treat a completed send as success.
         return fetch(CAREERS_ENDPOINT, {
           method: 'POST',
+          mode: 'no-cors',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify(payload)
         });
-      }).then(function (res) { return res.json(); })
-        .then(function (data) {
-          if (!data.ok) throw new Error(data.error || 'Upload failed');
+      }).then(function () {
           cForm.reset();
           showStatus('Thank you! Your application was received. We will be in touch if there is a fit.', 'ok');
         })
